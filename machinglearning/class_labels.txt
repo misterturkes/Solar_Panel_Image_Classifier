@@ -1,2 +1,3 @@
-redApple
-yellowBall
+roof
+solar panel
+
