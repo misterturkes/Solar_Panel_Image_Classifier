@@ -73,7 +73,7 @@ if __name__ == '__main__':
   # NxHxWxC, H:1, W:2
   height = input_details[0]['shape'][1]
   width = input_details[0]['shape'][2]
-  img = Image.open(args.image).resize((width, height))
+  img = Image.open(args.image).convert("RGB", palette=Image.ADAPTIVE, colors=24).resize((width, height))
 
   # add N dim
   input_data = np.expand_dims(img, axis=0)
