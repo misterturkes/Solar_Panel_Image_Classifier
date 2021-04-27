@@ -1,7 +1,7 @@
 const gKey = "AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY";
 const NRELKEY = "LomNWWBzpBjdlzoYBWwgYV008enn5lo9d7MeetaJ";
 const myForm = document.getElementById("address");
-const downloadForm = document.getElementByID("dwnldAddr")
+const downloadForm = document.getElementById("dwnldAddr")
 
 const urlEndpoint = "https://maps.googleapis.com/maps/api/geocode/";
 const urlEndpoint2 =
@@ -10,7 +10,6 @@ const urlStatic = "https://maps.googleapis.com/maps/api/staticmap?"
 let mAddress = "json?address=";
 
 var mymap = L.map("mapid");
-var map, mapOptions
 
 myForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -30,7 +29,6 @@ myForm.addEventListener("submit", (e) => {
 });
 
 myForm.addEventListener("download", (e) => {
-  e.preventDefault();
   exportPic()
 })
 
@@ -131,15 +129,15 @@ function PVWatts(lat, lng) {
 function exportPic() {
         //Set the Google Map Center.
         urlStatic += "center=" + mymap.getCenter.lat() + "," + mymap.getCenter.lng();
-
-        //Set the Google Map Size.
-        urlStatic += "&size=220x350";
-
+		console.log(mymap.getCenter.lat())
         //Set the Google Map Zoom.
         urlStatic += "&zoom=20";
+		
+		//Set the Google Map Size.
+        urlStatic += "&size=220x350";
 
         //Set the Google Map Type.
-        urlStatic += "&maptype=satellite;
+        urlStatic += "&maptype=satellite";
 
         urlStatic += "&key=" + gKey
 
