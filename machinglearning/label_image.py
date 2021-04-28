@@ -36,7 +36,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '-i',
       '--image',
-      default='ra.png',
+      default='roof.png',
       help='image to be classified')
   parser.add_argument(
       '-m',
@@ -54,7 +54,7 @@ if __name__ == '__main__':
       help='input_mean')
   parser.add_argument(
       '--input_std',
-      default=255, type=float,
+      default=225, type=float,
       help='input standard deviation')
   parser.add_argument(
       '--num_threads', default=None, type=int, help='number of threads')
@@ -66,6 +66,8 @@ if __name__ == '__main__':
 
   input_details = interpreter.get_input_details()
   output_details = interpreter.get_output_details()
+  
+  print(input_details)
 
   # check the type of the input tensor
   floating_model = input_details[0]['dtype'] == np.float32
@@ -77,7 +79,7 @@ if __name__ == '__main__':
 
   # add N dim
   input_data = np.expand_dims(img, axis=0)
-
+  # print(input_data)
   if floating_model:
     input_data = (np.float32(input_data) - args.input_mean) / args.input_std
 
