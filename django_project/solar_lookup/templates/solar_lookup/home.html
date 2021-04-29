@@ -1,13 +1,16 @@
 {% extends "solar_lookup/base.html" %}
 
 {% block content %}
-    <div class="top">
+    <div class="container">
+    	<div class="top">
             <form id="address">
         <input type="text" name="address" id="address" placeholder="Address" />
         <button type="submit" class="button">Enter</button>
       </form>
     </div>
-    <div id="mapid"></div>
+
+    </div>
+        <div class="container" id="mapid"></div>
     {% load static %}
     <script src="{% static '/scripts.js' %}"></script>
 {% endblock content %}

@@ -1,0 +1,27 @@
+{% extends "solar_lookup/base.html" %}
+
+{% block content %}
+    
+	<div class="top container">
+      <h1>Solar System Builder</h1>
+      <form id="address">
+        <input type="text" name="address" id="address" placeholder="Address" />
+        <button type="submit" class="button">Enter</button>
+      </form>
+      <button class="button" type="button" id="addButton">Add Panels</button>
+      <button class="button" type="button" id="removeButton">
+        Remove Panels
+      </button>
+      <p>Click map to add/remove solar panels</p>
+    </div>
+    <div class="container" id="mapid"></div>
+    <div id="pvwatts-output" class="output">
+      <h2 id="annual-power-output">Annual AC system output:</h2>
+      <h2 id="annual-power-cost">Annual electricity cost savings:</h2>
+    </div>
+
+
+    {% load static %}
+    <script src="{% static '/system_builder.js' %}"></script>
+
+{% endblock content %}
