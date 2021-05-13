@@ -72,27 +72,18 @@ function download(){
 	
 }
 
-function takeshot() {
-        axios({
+function analyzeCurrent(){
+	//sendImg(response.data);
+	axios({
 			url:download(),
 			method:'GET',
 			responseType:'blob'
-		})
-		.then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        //console.log(response.data)
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'shot.png');
-        document.body.appendChild(link);
-        link.click();
-        //sendImg(response.data);
-        let formdata = new FormData()
+		}).then((response) => {
+		let formdata = new FormData()
         let file = new Blob([response.data])
         formdata.append('image', file)
         formdata.append('name', "screenshot")
         console.log(formdata)
-
         axios({
           method: 'post',
           url: 'upload_image',
@@ -107,8 +98,23 @@ function takeshot() {
           document.getElementById("false-bar").value = virtualDoc.getElementById("false-bar").value
           
         });
+	});
+}
 
-
+function takeshot() {
+        axios({
+			url:download(),
+			method:'GET',
+			responseType:'blob'
+		})
+		.then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        //console.log(response.data)
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'shot.png');
+        document.body.appendChild(link);
+        link.click();
       });
 }
 
