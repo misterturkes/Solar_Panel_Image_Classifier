@@ -8,6 +8,30 @@ const urlEndpoint2 =
 const urlEndpointStatic = "https://maps.googleapis.com/maps/api/staticmap?"
 let mAddress = "json?address=";
 
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrfToken = getCookie('csrftoken');
+
+console.log("This is the csrftoken "+csrfToken)
+
+
+
+
 var mymap = L.map("mapid");
 
 myForm.addEventListener("submit", (e) => {
@@ -56,11 +80,29 @@ function takeshot() {
 		})
 		.then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
+        //console.log(response.data)
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', 'shot.png');
         document.body.appendChild(link);
         link.click();
+        //sendImg(response.data);
+        let formdata = new FormData()
+        let file = new Blob([response.data])
+        formdata.append('image', file)
+        formdata.append('name', "screenshot")
+        console.log(formdata)
+
+        axios({
+          method: 'post',
+          url: 'upload_image',
+          data: formdata,
+          headers: {"X-CSRFToken": csrfToken,'Content-Type': 'multipart/form-data'}
+        }).then((response) =>{
+          console.log(response)
+        });
+
+
       });
 }
 
@@ -79,6 +121,23 @@ function runAnalyze(){
 		getElementById("image-upload").value = link.click()
 	});
 		
+}
+
+function sendImg(m_img) {
+  // Send a POST request
+console.log(m_img)
+axios({
+  method: 'post',
+  name: 'axios_post',
+  url: '/upload_image',
+  data: {
+    solar: 0.8,
+    roof: 0.2,
+    blob: m_img
+  },
+  headers: {"X-CSRFToken": csrfToken}
+});
+
 }
 
 

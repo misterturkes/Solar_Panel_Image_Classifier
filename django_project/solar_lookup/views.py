@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf # TF2
 from machinglearning import sampleUsage
+import base64
 
 
 # Create your views here.
@@ -27,13 +28,36 @@ def upload_image(request):
 			print("no post")
 			'''
 		print("this is a post")
-		upload_file = request.FILES['myImg']
-		print(upload_file.name)
-		print(upload_file.size)
+		print(request)
+		context = {'solar': 80,
+		 			 'roof': 20}
+
+		
+
+		print(request.FILES)
+		upload_file = request.FILES['image']
 		temp = sampleUsage.simple_use(upload_file)
+		#img = Image.open(upload_file.stream)
+		#img.save("my_screenshot.png")
+		#with open("my_screenshot.png", "wb") as fh:
+		#	fh.write(base64.decodebytes(upload_file))
+		#my_blob = upload_file.read()
+		#print(upload_file.read())
+
+
+
+		# upload_file = request.FILES['myImg']
+		# print(upload_file.name)
+		# print(upload_file.size)
+		# temp = sampleUsage.simple_use(upload_file)
 		context = {'solar': temp["solar panel"] * 100,
-					 'roof': temp["roof"] * 100}
+		 			 'roof': temp["roof"] * 100}
 		print(context)
+
+
+
+
+
 		#sampleUsage.simple_use('machinglearning/roof.png')
 		'''
 		form = SatelliteImageryForm(request.POST, request.FILES)

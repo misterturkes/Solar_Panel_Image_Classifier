@@ -17,10 +17,12 @@
         <div class="container" id="mapid">
             
         </div>
+        {% csrf_token %}
         <div class="top">
                 <button onclick="takeshot()">
             Download Screenshot
         </button>
+        <input type="submit" onclick="runAnalyze()" value="Analyze">
 
         <!--<h1>Screenshot:</h1> -->
     </div>
@@ -32,7 +34,7 @@
                 <br>
         		<form action="{% url 'upload_image' %}" method="POST" enctype="multipart/form-data">
         			{% csrf_token %}
-        			<input type="file" id="image-upload" name="myImg">
+        			<input type="file" id="image-upload" name="image">
         			<input type="submit" onclick="runAnalyze()" value="Analyze">
         		</form>
         	</div>
