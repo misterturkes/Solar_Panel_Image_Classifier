@@ -43,7 +43,7 @@
                     link.setAttribute('download', 'shot.png');
                     document.body.appendChild(link);
                     link.click();
-      })
+      });
 					
             // Use the html2canvas
             // function to take a screenshot
@@ -55,10 +55,7 @@
             //         .getElementById('output')
             //         .appendChild(canvas);
             //     })
-            domtoimage.toBlob(document.getElementById('mapid'))
-    .then(function (blob) {
-        window.saveAs(blob, 'mapid.png');
-    });
+           
 }
 
 
