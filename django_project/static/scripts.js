@@ -48,6 +48,40 @@ function download(){
 	
 }
 
+function takeshot() {
+        axios({
+			url:download(),
+			method:'GET',
+			responseType:'blob'
+		})
+		.then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'shot.png');
+        document.body.appendChild(link);
+        link.click();
+      });
+}
+
+function runAnalyze(){
+	axios({
+			url:download(),
+			method:'GET',
+			responseType:'blob'
+		})
+		.then((response) =>{
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement('a');
+        link.href = url;
+		link.setAttribute('download', 'shot.png');
+        document.body.appendChild(link);
+		getElementById("image-upload").value = link.click()
+	});
+		
+}
+
+
 function setMyMap(lat, lng) {
   mymap.setView([lat, lng], 20);
 

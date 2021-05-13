@@ -1,6 +1,9 @@
 {% extends "solar_lookup/base.html" %}
 
 {% block content %}
+  <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js">
+</script>
     <div class="container">
     	<div class="top">
             <form id="address">
@@ -23,66 +26,14 @@
     </div>
         
     <div id="output"></div> 
-  <script src=
-"https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js">
-</script>
-    <script>
-        // Define the function 
-        // to screenshot the div
-        function takeshot() {
-			var urlend = download();
-            axios({
-				url:urlend,
-				method:'GET',
-				responseType:'blob'
-			})
-			.then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', 'shot.png');
-                    document.body.appendChild(link);
-                    link.click();
-      });
-					
-            // Use the html2canvas
-            // function to take a screenshot
-            // and append it
-            // to the output div
-            // html2canvas(div).then(
-            //     function (canvas) {
-            //         document
-            //         .getElementById('output')
-            //         .appendChild(canvas);
-            //     })
-           
-}
-
-
-            
-/*
-domtoimage.toPng(node)
-    .then(function (dataUrl) {
-        var img = new Image();
-        img.src = dataUrl;
-        document.body.appendChild(img);
-    })
-    .catch(function (error) {
-        console.error('oops, something went wrong!', error);
-    });
-
-        }
-        */
-    </script>
 
         <div class="container">
         	<div class="top">
                 <br>
-        		<h2>Upload Satellite Image to Analyze</h2>
         		<form action="{% url 'upload_image' %}" method="POST" enctype="multipart/form-data">
         			{% csrf_token %}
         			<input type="file" id="image-upload" name="myImg">
-        			<input type="submit" value="Analyze">
+        			<input type="submit" onclick="runAnalyze()" value="Analyze">
         		</form>
         	</div>
 
