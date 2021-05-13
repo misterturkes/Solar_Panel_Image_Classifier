@@ -5,6 +5,7 @@ const myForm = document.getElementById("address");
 const urlEndpoint = "https://maps.googleapis.com/maps/api/geocode/";
 const urlEndpoint2 =
   "https://maps.googleapis.com/maps/api/elevation/json?locations=";
+const urlEndpointStatic = "https://maps.googleapis.com/maps/api/staticmap?"
 let mAddress = "json?address=";
 
 var mymap = L.map("mapid");
@@ -39,6 +40,13 @@ mymap.addEventListener("click", (e) => {
     "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY"
   );
 });
+
+function download(){
+	//https://maps.googleapis.com/maps/api/staticmap?center=lat,lng&zoom=20&size=500x500&key=API_Key
+	let stat = urlEndpointStatic+"center="+mymap.getCenter().lat+ ","+mymap.getCenter().lng +"&maptype=satellite&zoom=20&size=500x500&format=png&key=" + gKey;
+	return stat;
+	
+}
 
 function setMyMap(lat, lng) {
   mymap.setView([lat, lng], 20);

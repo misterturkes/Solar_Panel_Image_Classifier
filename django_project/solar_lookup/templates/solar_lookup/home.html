@@ -16,23 +16,35 @@
         </div>
         <div class="top">
                 <button onclick="takeshot()">
-            Take Screenshot
+            Download Screenshot
         </button>
 
         <!--<h1>Screenshot:</h1> -->
     </div>
         
-    <div id="output"></div>
-  
-    <script type="text/javascript">
-  
+    <div id="output"></div> 
+  <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js">
+</script>
+    <script>
         // Define the function 
         // to screenshot the div
         function takeshot() {
-            let div =
-                document.getElementById('mapid');
-            let node = div;
-  
+			var urlend = download();
+            axios({
+				url:urlend,
+				method:'GET',
+				responseType:'blob'
+			})
+			.then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'shot.png');
+                    document.body.appendChild(link);
+                    link.click();
+      })
+					
             // Use the html2canvas
             // function to take a screenshot
             // and append it
@@ -88,6 +100,7 @@ domtoimage.toPng(node)
             </div>
         	
         </div>
-    {% load static %}
+   {% load static %}
     <script src="{% static '/scripts.js' %}"></script>
+
 {% endblock content %}
