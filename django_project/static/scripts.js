@@ -99,7 +99,13 @@ function takeshot() {
           data: formdata,
           headers: {"X-CSRFToken": csrfToken,'Content-Type': 'multipart/form-data'}
         }).then((response) =>{
-          console.log(response)
+          console.log(typeof response.data)
+          const parser = new DOMParser()
+          const virtualDoc = parser.parseFromString(response.data, 'text/html')
+          //console.log(virtualDoc.getElementById("true-bar").value)
+          document.getElementById("true-bar").value = virtualDoc.getElementById("true-bar").value
+          document.getElementById("false-bar").value = virtualDoc.getElementById("false-bar").value
+          
         });
 
 
