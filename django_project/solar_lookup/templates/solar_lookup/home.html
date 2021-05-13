@@ -10,7 +10,84 @@
     </div>
 
     </div>
-        <div class="container" id="mapid"></div>
+
+        <div class="container" id="mapid">
+            
+        </div>
+        <div class="top">
+                <button onclick="takeshot()">
+            Take Screenshot
+        </button>
+
+        <!--<h1>Screenshot:</h1> -->
+    </div>
+        
+    <div id="output"></div>
+  
+    <script type="text/javascript">
+  
+        // Define the function 
+        // to screenshot the div
+        function takeshot() {
+            let div =
+                document.getElementById('mapid');
+            let node = div;
+  
+            // Use the html2canvas
+            // function to take a screenshot
+            // and append it
+            // to the output div
+            // html2canvas(div).then(
+            //     function (canvas) {
+            //         document
+            //         .getElementById('output')
+            //         .appendChild(canvas);
+            //     })
+            domtoimage.toBlob(document.getElementById('mapid'))
+    .then(function (blob) {
+        window.saveAs(blob, 'mapid.png');
+    });
+}
+
+
+            
+/*
+domtoimage.toPng(node)
+    .then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+    })
+    .catch(function (error) {
+        console.error('oops, something went wrong!', error);
+    });
+
+        }
+        */
+    </script>
+
+        <div class="container">
+        	<div class="top">
+                <br>
+        		<h2>Upload Satellite Image to Analyze</h2>
+        		<form action="{% url 'upload_image' %}" method="POST" enctype="multipart/form-data">
+        			{% csrf_token %}
+        			<input type="file" id="image-upload" name="myImg">
+        			<input type="submit" value="Analyze">
+        		</form>
+        	</div>
+
+        	<div class="container top">
+                <br>
+                <label>True</label>
+<progress id="true-bar" value="{{ solar }}" max="100"> 32% </progress>
+<br>
+<label>False </label>
+<progress id="false-bar" value="{{ roof }}" max="100" style="color:red"></progress>
+    
+            </div>
+        	
+        </div>
     {% load static %}
     <script src="{% static '/scripts.js' %}"></script>
 {% endblock content %}

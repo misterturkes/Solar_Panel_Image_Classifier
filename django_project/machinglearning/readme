@@ -1,0 +1,4 @@
+this is a image classifer model build with tensorflow hub tool. use the images in the image folds to train the model, to use the model, run label_image.py with image source.
+
+
+see sampleUsage.py for how to use it.
