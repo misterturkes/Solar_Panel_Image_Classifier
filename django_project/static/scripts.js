@@ -55,14 +55,14 @@ mymap.addEventListener("click", (e) => {
   let mlng = e.latlng.lng;
 
   //let urlParams = encodeURI(mAddress).replaceAll("%20", "+");
-  let urlParams = `${mlat},${mlng}&key=${gKey}`;
+  var urlParams = mlat + "," + mlng + "&key=" +gKey;
 
   const request2 = new Request(urlEndpoint2 + urlParams);
 
-  //getElevation(request2);
-  getElevation(
-    "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY"
-  );
+  getElevation(request2);
+  //getElevation(
+   // "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY"
+  //);
 });
 
 function download(){
@@ -71,6 +71,11 @@ function download(){
 	return stat;
 	
 }
+/* utilizes the same axios package from takeShot() to generate the .png static image of current
+map view. POST's that image to the html document as a hidden element. This calls the views.py
+as it has a POST listener that then takes the "upload_image" hidden element and runs it through the 
+imageClassifier.py and posts that output back to "true-bar" and "false-bar"
+*/
 
 function analyzeCurrent(){
 	//sendImg(response.data);
@@ -100,7 +105,11 @@ function analyzeCurrent(){
         });
 	});
 }
-
+/* called by the Download ScreenShot button. Creates axios object that generates a blob 
+element of the static link .png image based on current map view's latitude and longitude.
+It is then put into the main html document as element 'a' which then creates a hypertext link
+that simulates the user clicking on it causing the download.
+*/
 function takeshot() {
         axios({
 			url:download(),
@@ -117,7 +126,8 @@ function takeshot() {
         link.click();
       });
 }
-
+/* pulls from uploaded image file
+*/
 function runAnalyze(){
 	axios({
 			url:download(),
