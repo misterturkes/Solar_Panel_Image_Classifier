@@ -6,3 +6,6 @@ dependencies:
     - pip
     - tensorflow
     - tensorflow-hub
+    - Django
+    - django-crispy-forms
+    - Pillow
