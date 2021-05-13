@@ -30,7 +30,7 @@ def load_labels(filename):
 def getResult(imagefile):
 
   interpreter = tf.lite.Interpreter(
-      model_path='machinglearning/new_mobile_model.tflite', num_threads=None)
+      model_path='machinglearning/new_mobile_model.tflite')
   interpreter.allocate_tensors()
 
   input_details = interpreter.get_input_details()
