@@ -44,7 +44,10 @@ def upload_image(request):
 		context = {'solar': temp["solar panel"] * 100,
 		 			 'roof': temp["roof"] * 100}
 		print(context)
+		my_confidence = temp["solar panel"] * 100
 
+		my_entry = SatelliteImagery(photo=upload_file,username="test1", address="553 Sth", confidence=my_confidence )
+		my_entry.save()
 
 
 
