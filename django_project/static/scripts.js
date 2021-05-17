@@ -5,32 +5,30 @@ const myForm = document.getElementById("address");
 const urlEndpoint = "https://maps.googleapis.com/maps/api/geocode/";
 const urlEndpoint2 =
   "https://maps.googleapis.com/maps/api/elevation/json?locations=";
-const urlEndpointStatic = "https://maps.googleapis.com/maps/api/staticmap?"
+const urlEndpointStatic = "https://maps.googleapis.com/maps/api/staticmap?";
 let mAddress = "json?address=";
 
-
+let tempLat = 0;
+let tempLng = 0;
 
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
     }
-    return cookieValue;
+  }
+  return cookieValue;
 }
-const csrfToken = getCookie('csrftoken');
+const csrfToken = getCookie("csrftoken");
 
-console.log("This is the csrftoken "+csrfToken)
-
-
-
+console.log("This is the csrftoken " + csrfToken);
 
 var mymap = L.map("mapid");
 
@@ -53,23 +51,31 @@ myForm.addEventListener("submit", (e) => {
 mymap.addEventListener("click", (e) => {
   let mlat = e.latlng.lat;
   let mlng = e.latlng.lng;
+  tempLat = mlat;
+  tempLng = mlng;
 
   //let urlParams = encodeURI(mAddress).replaceAll("%20", "+");
-  var urlParams = mlat + "," + mlng + "&key=" +gKey;
+  var urlParams = mlat + "," + mlng + "&key=" + gKey;
 
   const request2 = new Request(urlEndpoint2 + urlParams);
 
   getElevation(request2);
   //getElevation(
-   // "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY"
+  // "https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=AIzaSyA8c4QHC43f_e06VHKWB5lNHd3dYxmJjjY"
   //);
 });
 
-function download(){
-	//https://maps.googleapis.com/maps/api/staticmap?center=lat,lng&zoom=20&size=500x500&key=API_Key
-	let stat = urlEndpointStatic+"center="+mymap.getCenter().lat+ ","+mymap.getCenter().lng +"&maptype=satellite&zoom=20&size=500x500&format=png&key=" + gKey;
-	return stat;
-	
+function download() {
+  //https://maps.googleapis.com/maps/api/staticmap?center=lat,lng&zoom=20&size=500x500&key=API_Key
+  let stat =
+    urlEndpointStatic +
+    "center=" +
+    mymap.getCenter().lat +
+    "," +
+    mymap.getCenter().lng +
+    "&maptype=satellite&zoom=20&size=500x500&format=png&key=" +
+    gKey;
+  return stat;
 }
 /* utilizes the same axios package from takeShot() to generate the .png static image of current
 map view. POST's that image to the html document as a hidden element. This calls the views.py
@@ -77,33 +83,41 @@ as it has a POST listener that then takes the "upload_image" hidden element and 
 imageClassifier.py and posts that output back to "true-bar" and "false-bar"
 */
 
-function analyzeCurrent(){
-	//sendImg(response.data);
-	axios({
-			url:download(),
-			method:'GET',
-			responseType:'blob'
-		}).then((response) => {
-		let formdata = new FormData()
-        let file = new Blob([response.data])
-        formdata.append('image', file)
-        formdata.append('name', "screenshot")
-        console.log(formdata)
-        axios({
-          method: 'post',
-          url: 'upload_image',
-          data: formdata,
-          headers: {"X-CSRFToken": csrfToken,'Content-Type': 'multipart/form-data'}
-        }).then((response) =>{
-          console.log(typeof response.data)
-          const parser = new DOMParser()
-          const virtualDoc = parser.parseFromString(response.data, 'text/html')
-          //console.log(virtualDoc.getElementById("true-bar").value)
-          document.getElementById("true-bar").value = virtualDoc.getElementById("true-bar").value
-          document.getElementById("false-bar").value = virtualDoc.getElementById("false-bar").value
-          
-        });
-	});
+function analyzeCurrent() {
+  //sendImg(response.data);
+  axios({
+    url: download(),
+    method: "GET",
+    responseType: "blob",
+  }).then((response) => {
+    let formdata = new FormData();
+    let file = new Blob([response.data]);
+    formdata.append("image", file);
+    formdata.append("name", "screenshot");
+    formdata.append("lat", tempLat);
+    formdata.append("lng", tempLng);
+    console.log(formdata);
+    axios({
+      method: "post",
+      url: "upload_image",
+      data: formdata,
+      headers: {
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "multipart/form-data",
+      },
+    }).then((response) => {
+      console.log(typeof response.data);
+      const parser = new DOMParser();
+      const virtualDoc = parser.parseFromString(response.data, "text/html");
+      //console.log(virtualDoc.getElementById("true-bar").value)
+      document.getElementById("true-bar").value = virtualDoc.getElementById(
+        "true-bar"
+      ).value;
+      document.getElementById("false-bar").value = virtualDoc.getElementById(
+        "false-bar"
+      ).value;
+    });
+  });
 }
 /* called by the Download ScreenShot button. Creates axios object that generates a blob 
 element of the static link .png image based on current map view's latitude and longitude.
@@ -111,57 +125,52 @@ It is then put into the main html document as element 'a' which then creates a h
 that simulates the user clicking on it causing the download.
 */
 function takeshot() {
-        axios({
-			url:download(),
-			method:'GET',
-			responseType:'blob'
-		})
-		.then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        //console.log(response.data)
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'shot.png');
-        document.body.appendChild(link);
-        link.click();
-      });
+  axios({
+    url: download(),
+    method: "GET",
+    responseType: "blob",
+  }).then((response) => {
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    //console.log(response.data)
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "shot.png");
+    document.body.appendChild(link);
+    link.click();
+  });
 }
 /* pulls from uploaded image file
-*/
-function runAnalyze(){
-	axios({
-			url:download(),
-			method:'GET',
-			responseType:'blob'
-		})
-		.then((response) =>{
-		const url = window.URL.createObjectURL(new Blob([response.data]));
-		const link = document.createElement('a');
-        link.href = url;
-		link.setAttribute('download', 'shot.png');
-        document.body.appendChild(link);
-		getElementById("image-upload").value = link.click()
-	});
-		
+ */
+function runAnalyze() {
+  axios({
+    url: download(),
+    method: "GET",
+    responseType: "blob",
+  }).then((response) => {
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "shot.png");
+    document.body.appendChild(link);
+    getElementById("image-upload").value = link.click();
+  });
 }
 
 function sendImg(m_img) {
   // Send a POST request
-console.log(m_img)
-axios({
-  method: 'post',
-  name: 'axios_post',
-  url: '/upload_image',
-  data: {
-    solar: 0.8,
-    roof: 0.2,
-    blob: m_img
-  },
-  headers: {"X-CSRFToken": csrfToken}
-});
-
+  console.log(m_img);
+  axios({
+    method: "post",
+    name: "axios_post",
+    url: "/upload_image",
+    data: {
+      solar: 0.8,
+      roof: 0.2,
+      blob: m_img,
+    },
+    headers: { "X-CSRFToken": csrfToken },
+  });
 }
-
 
 function setMyMap(lat, lng) {
   mymap.setView([lat, lng], 20);

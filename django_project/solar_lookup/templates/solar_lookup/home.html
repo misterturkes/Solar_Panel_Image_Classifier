@@ -1,58 +1,102 @@
-{% extends "solar_lookup/base.html" %}
+{% extends "solar_lookup/base.html" %} {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<div class="content-section container">
+  <form class="form-group" id="address" method="POST">
+    <fieldset class="form-group" style="display: flex">
+      <input
+        type="text"
+        name="address"
+        id="address"
+        placeholder="Address"
+        class="textinput textInput form-control"
+      />
+      <button
+        type="submit"
+        class="button btn btn-outline-info"
+        style="color: #5f788a; border-color: #5f788a"
+      >
+        Enter
+      </button>
+    </fieldset>
+  </form>
+</div>
 
-{% block content %}
-  <script src=
-"https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js">
-</script>
-    <div class="container">
-    	<div class="top">
-            <form id="address">
-        <input type="text" name="address" id="address" placeholder="Address" />
-        <button type="submit" class="button">Enter</button>
-      </form>
+<div class="container" id="mapid"></div>
+<div class="container">
+  {% csrf_token %}
+  <div class="row justify-content-center">
+    <div class="col-3">
+      <button
+        onclick="takeshot()"
+        class="button btn btn-outline-info"
+        style="color: #5f788a; border-color: #5f788a; margin-top: 15px"
+      >
+        Download Screenshot
+      </button>
     </div>
-
+    <div class="col-3">
+      <button
+        onclick="analyzeCurrent()"
+        class="button btn btn-outline-info"
+        style="color: #5f788a; border-color: #5f788a; margin-top: 15px"
+      >
+        Analyze Current View
+      </button>
     </div>
+  </div>
+</div>
 
-        <div class="container" id="mapid">
-            
-        </div>
-        {% csrf_token %}
-        <div class="top">
-                <button onclick="takeshot()">
-            Download Screenshot
-        </button>
-		<button onclick="analyzeCurrent()">
-			Analyze Current View
-		</button>
+<div id="output"></div>
 
-        <!--<h1>Screenshot:</h1> -->
+<div class="container">
+  <div class="row justify-content-center" style="margin-top: 15px">
+    <div class="col-3">
+        <form
+      action="{% url 'upload_image' %}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+        <input
+        type="file"
+        class="btn btn-outline-info"
+        id="image-upload"
+        name="image"
+        style="
+          width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        "
+      />
+      <label for="image-upload" class="button btn btn-outline-info" style="color: #5f788a; border-color: #5f788a; margin-bottom: 0; justify-content: center;"" >Upload File</label>
     </div>
-        
-    <div id="output"></div> 
-
-        <div class="container">
-        	<div class="top">
-                <br>
-        		<form action="{% url 'upload_image' %}" method="POST" enctype="multipart/form-data">
-        			{% csrf_token %}
-        			<input type="file" id="image-upload" name="image">
-        			<input type="submit" onclick="runAnalyze()" value="Analyze">
-        		</form>
-        	</div>
-
-        	<div class="container top">
-                <br>
-                <label>True</label>
-<progress id="true-bar" value="{{ solar }}" max="100"> 32% </progress>
-<br>
-<label>False </label>
-<progress id="false-bar" value="{{ roof }}" max="100" style="color:red"></progress>
+    <div class="col-3">
+      <input type="submit" onclick="runAnalyze()" value="Analyze" class="button
+      btn btn-outline-info" style="color: #5f788a; border-color: #5f788a;"" />
+    </div>
+    </form>
     
-            </div>
-        	
-        </div>
-   {% load static %}
-    <script src="{% static '/scripts.js' %}"></script>
+    
+</div>
+
+  <div class="container top">
+    <br />
+    <label>True</label>
+    <progress id="true-bar" value="{{ solar }}" max="100">32%</progress>
+    <br />
+    <label>False </label>
+    <progress
+      id="false-bar"
+      value="{{ roof }}"
+      max="100"
+      style="color: red"
+    ></progress>
+  </div>
+</div>
+{% load static %}
+<script src="{% static '/scripts.js' %}"></script>
 
 {% endblock content %}

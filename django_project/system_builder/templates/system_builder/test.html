@@ -1,25 +1,80 @@
 {% extends "solar_lookup/base.html" %}
 
 {% block content %}
-    
-	<div class="top container">
-      <h1>Solar System Builder</h1>
-      <form id="address">
-        <input type="text" name="address" id="address" placeholder="Address" />
-        <button type="submit" class="button">Enter</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+	<div class="content-section container">
+      <div class="row justify-content-center">
+        <div class="col-6">
+          <h1 style="text-align: center;">Solar System Builder</h1>
+        </div>
+      </div>
+      <form class="form-group" id="address">
+        <fieldset class="form-group" style="display: flex">
+          <input type="text" name="address" id="address" placeholder="Address" class="textinput textInput form-control"/>
+        <button type="submit" class="button btn btn-outline-info"
+        style="color: #5f788a; border-color: #5f788a"">Enter</button>
+        </fieldset>
       </form>
-      <br>
-      <button class="button" type="button" id="addButton">Add Panels</button>
-      <button class="button" type="button" id="removeButton">
-        Remove Panels
-      </button>
-      <p>Click map to add/remove solar panels</p>
     </div>
     <div class="container" id="mapid"></div>
-    <div id="pvwatts-output" class="output">
+    <div class="container">
+      <br>
+      <div class="row justify-content-start">
+        <div class="col-4">
+          <button class="button btn btn-outline-info"
+          style="color: #5f788a; border-color: #5f788a" type="button" id="addButton">Add Panels</button>
+      <button class="button btn btn-outline-info"
+      style="color: #5f788a; border-color: #5f788a" type="button" id="removeButton">
+        Remove Panels
+      </button>
+        </div>
+        <div class="col-4 range">
+          {% csrf_token %}
+          <input id="mySlider" type="range" class="form-range" min="0" max="180" step="1" value="90" oninput="updateLiveSlider(this.value)"/>
+          
+        </div>
+        <div class="col-1">
+          <div 
+          id="panelAngle"
+          style="width: 30px; height: 20px; background-color:  #5f788a;">
+          </div>
+        </div>
+        <div class="col-2">
+          <p>Rotate Panel</p>
+        </div>
+        
+        <div class="row justify-content-start">
+          <div class="col-4"></div>
+          <div class="col-4 range">
+            {% csrf_token %}
+            <input id="myCompas" type="range" class="form-range" min="0" max="360" step="1" value="180" oninput="updateLiveCompass(this.value)"/>
+          </div>
+          <div class="col-1">
+            <div id="compassAngle">
+              <img src="https://img.icons8.com/ios-glyphs/30/000000/arrow.png"  id="compassImg" style="transform: rotate(-90deg);"/>
+            </div>
+          </div>
+          <div class="col-2">
+            <p>Panel Azimuth</p>
+          </div>
+        </div>
+      </div>
+      
+      
+    </div>
+    
+    <div id="pvwatts-output" class="content-section container output">
+      <h2 id="system-size">System Size(KWh): </h2>
       <h2 id="annual-power-output">Annual AC system output:</h2>
       <h2 id="annual-power-cost">Annual electricity cost savings:</h2>
+      <div class="row justify-content-center">
+        <div class="col-6">
+          <button class="button btn btn-outline-info"
+          style="color: #5f788a; border-color: #5f788a" type="button" id="save">Save Model</button>
+        </div>
+      </div>
     </div>
+
 
 
     {% load static %}

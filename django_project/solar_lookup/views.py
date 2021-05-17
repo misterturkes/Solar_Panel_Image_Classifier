@@ -15,17 +15,7 @@ def home(request):
 def upload_image(request):
 	print("called in upload_image")
 	if request.method == 'POST':
-		'''
-		print("upload_image")
-		form = SatelliteImageryForm(request.POST, request.FILES)
-		if form.is_valid():
-			form.save()
-			print("Image Saved")
-			return redirect('home')
-		else:
-			form = SatelliteImageryForm()
-			print("no post")
-			'''
+		
 		print("this is a post")
 		print(request)
 		print(request.read())
@@ -46,23 +36,9 @@ def upload_image(request):
 		print(context)
 		my_confidence = temp["solar panel"] * 100
 
-		my_entry = SatelliteImagery(photo=upload_file,username="test1", address="553 Sth", confidence=my_confidence )
+		my_entry = SatelliteImagery(photo=upload_file,username="demotest", address="324 Paseo de San Carlos, San Jose, CA 95192", confidence=my_confidence )
 		my_entry.save()
 
-
-
-
-		#sampleUsage.simple_use('machinglearning/roof.png')
-		'''
-		form = SatelliteImageryForm(request.POST, request.FILES)
-		if form.is_valid():
-			form.save()
-			print("Image Saved")
-			return redirect('home')
-		else:
-			form = SatelliteImageryForm()
-			print("no post")
-			'''
 		
 	return render(request,'solar_lookup/home.html',  context)
 
